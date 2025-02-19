@@ -4,11 +4,10 @@
 #include <CircularBuffer.hpp>
 #include <M5StickCPlus.h>
 
-
 // テキストサイズ
 #define TEXT_SIZE 1
-// 画面の向き 1: 横向き（USBポートが右）3: 横向き（USBポートが左）2:
-// 縦向き（USBポートが下）4: 縦向き（USBポートが上）
+// 画面の向き 1:横向き（USBポートが右） 3:横向き（USBポートが左）
+// 2:縦向き（USBポートが下） 4:縦向き（USBポートが上）7
 #define SCREAN_ROTATION 3
 // 画面の幅
 #define SCREEN_WIDTH 240
@@ -28,27 +27,25 @@
 // スクロール領域の高さ
 #define SCREEN_SCROLL_HEIGHT (SCREEN_HEIGHT - SCREEN_SCROLL_Y)
 // 最大行数
-#define MAX_LINES ((SCREEN_SCROLL_HEIGHT - SCREEN_SCROLL_MARGIN * 2) / SCROLL_LINE_HEIGHT)
-
-// 文字列のバッファ
-static CircularBuffer<String, MAX_LINES> lines;
-// 現在のY位置
-int currentY = SCREEN_SCROLL_MARGIN;
-// 表示するテキストのインデックス
-int textIndex = 0;
+#define MAX_LINES                                                              \
+  ((SCREEN_SCROLL_HEIGHT - SCREEN_SCROLL_MARGIN * 2) / SCROLL_LINE_HEIGHT)
 
 // 赤外線リモコン通信インスタンス
 IRRemote2 *irr;
 
 // 新しいテキストを表示し、スクロール処理を行う関数
 void addScrollingText(String text) {
+  // 文字列のバッファ
+  static CircularBuffer<String, MAX_LINES> lines;
+
   if (lines.isFull()) {
     lines.shift();
   }
   lines.push(text);
 
   // 新しいテキストを描画
-  M5.Lcd.fillRect(SCREEN_SCROLL_X, SCREEN_SCROLL_Y, SCREEN_SCROLL_WIDTH, SCREEN_SCROLL_HEIGHT, BLACK);
+  M5.Lcd.fillRect(SCREEN_SCROLL_X, SCREEN_SCROLL_Y, SCREEN_SCROLL_WIDTH,
+                  SCREEN_SCROLL_HEIGHT, BLACK);
   uint16_t currentY = SCREEN_SCROLL_Y + SCREEN_SCROLL_MARGIN;
   for (uint16_t i = 0; i < lines.size(); i++) {
     M5.Lcd.setCursor(SCREEN_SCROLL_MARGIN, currentY);
