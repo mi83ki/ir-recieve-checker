@@ -88,10 +88,7 @@ bool IRRemote::recieveIR(void) {
     m_rxData.data.word = IrReceiver.decodedIRData.decodedRawData;
     m_rxData.format = IrReceiver.decodedIRData.protocol;
     IrReceiver.resume();
-    logger.debug("IR recieved: format = " + String(getFormat()) + ", ap = " +
-                 String(getAp()) + ", teamId = " + String(getTeamId()) +
-                 ", isDeath = " + String(getIsDeath()) + ", isHeal = " +
-                 String(getIsHeal()) + ", id = " + String(getId()));
+    logger.debug(getDebugString());
     if (_bDebug)
       printDebug();
     return (true);
@@ -101,15 +98,31 @@ bool IRRemote::recieveIR(void) {
   }
 }
 
+String IRRemote::getDebugString(void) {
+  return "IR recieved: format = " + String(getFormat()) +
+         ", id = " + String(getId()) + ", ap = " + String(getAp()) +
+         ", teamId = " + String(getTeamId()) +
+         ", isDeath = " + String(getIsDeath()) +
+         ", isHeal = " + String(getIsHeal()) + ", 0b " +
+         String((uint32_t)IrReceiver.decodedIRData.decodedRawData, BIN);
+}
+
+String IRRemote::getDebugHeaderString(void) {
+  return "format,id,ap,teamId,isDeath,isHeal,raw";
+}
+
+String IRRemote::getDebugRecordString(void) {
+  return String(getFormat()) + "," + String(getId()) + "," + String(getAp()) +
+         "," + String(getTeamId()) + "," + String(getIsDeath()) + "," +
+         String(getIsHeal()) + "," +
+         String((uint32_t)IrReceiver.decodedIRData.decodedRawData, BIN);
+}
+
 /**
  * @brief デバッグ用のメッセージを出力する
  */
 void IRRemote::printDebug(void) {
-  Serial.println(
-      String(millis()) + ", " + String(getFormat()) + ", " + String(getAp()) +
-      ", " + String(getTeamId()) + ", " + String(getIsDeath()) + ", " +
-      String(getIsHeal()) + ", " + String(getId()) + ", 0b " +
-      String((uint32_t)IrReceiver.decodedIRData.decodedRawData, BIN));
+  Serial.println(String(millis()) + ", " + getDebugString());
 }
 
 //-------------------------------------------------------

@@ -44,6 +44,9 @@ class IRRemote {
   void clearIRData(void);
   void setDebug(bool debug);
   bool recieveIR(void);
+  String getDebugString(void);
+  String getDebugHeaderString(void);
+  String getDebugRecordString(void);
   void printDebug(void);
   void sendIR(uint32_t data, int nbits);
   static uint8_t getMaxTeamId(void);
@@ -64,7 +67,7 @@ class IRRemote {
   bool _bDebug;
 
   // 各種設定値
-  static const uint8_t IR_RX_PIN = 35;      // 赤外線受光素子
+  static const uint8_t IR_RX_PIN = 36;      // 赤外線受光素子
   static const uint8_t IR_TX_PIN = 33;      // 赤外線送信用LED
   static uint8_t IR_FORMAT;                 // 赤外発光のフォーマット
   static const uint8_t IR_DATA_SIZE = 16;   // IDのデータサイズ(bit)
